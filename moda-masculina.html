@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Moda Masculina</title>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+  </head>
+  <style>
+    .container {
+      position: relative;
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 20px;
+      width: 90%;
+    }
+
+    #imagem-produtos {
+      width: 8rem;
+    }
+
+    .imagem {
+      width: 100%;
+      height: 35vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #ver-mais{
+      text-decoration: none;
+    }
+  </style>
+  <body>
+    <div class="container">
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link" href="home.html">Home</a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link active"
+            aria-current="page"
+            href="moda-masculina.html"
+            >Moda Masculina</a
+          >
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="moda-feminina.html">Moda Feminina</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="eletronicos.html">Eletrônicos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="joias.html">Jóias</a>
+        </li>
+      </ul>
+    </div>
+
+    <div
+      class="modal fade"
+      id="modalDetalhesMasculino"
+      tabindex="-1"
+      aria-labelledby="modalDetalhesMasculinoLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="modalDetalhesMasculinoLabel">
+              Modal title
+            </h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div id="corpo-modal" class="modal-body"></div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Fechar
+            </button>
+            <button type="button" class="btn btn-primary">Ok</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="masculino" class="row row-cols-1 row-cols-md-3 g-4"></div>
+
+    <script>
+      fetch("https://fakestoreapi.com/products/category/men's%20clothing")
+        .then((response) => response.json())
+        .then((produtosModaMasculina) =>
+          renderizarModaMasculina(produtosModaMasculina)
+        );
+
+      function abrirModalVerMais(
+        title,
+        image,
+        description,
+        id,
+        price,
+        rate,
+        count
+      ) {
+        document.getElementById("corpo-modal").innerHTML = "Entrou no modal";
+      }
+
+      function converterMoeda(valor) {
+        return valor.toLocaleString("pt-br", {
+          style: "currency",
+          currency: "BRL",
+        });
+      }
+
+      function renderizarModaMasculina(produtosModaMasculina) {
+        const itensMasculinos = document.getElementById("masculino");
+        for (let i = 0; i < produtosModaMasculina.length; i++) {
+          const masc = produtosModaMasculina[i];
+          const newMasc = document.createElement("div");
+          const html = `
+              <div id="caixa" class="col">
+      <div class="card h-100">
+        <div class="imagem">
+          <img id="imagem-produtos" src="${
+            masc.image
+          }" class="card-img-top" alt="...">
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">${masc.title.substring(0, 30)}...</h5>
+          <p class="card-text">${masc.description.substring(
+            0,
+            40
+          )}... <a id="ver-mais" data-bs-toggle="modal" data-bs-target="#modalDetalhesMasculino" href="javascript:abrirModalVerMais(
+            '${masc.title}', 
+            '${masc.image}', 
+            '${masc.description}',
+            '${masc.id}',
+            '${converterMoeda(masc.price)}',
+            '${masc.rating.rate}',
+            '${masc.rating.count}')" >ver mais</a></p>
+        </div>
+        <div class="card-footer">
+          <small class="text-body-secondary">${converterMoeda(
+            masc.price
+          )}</small>
+        </div>
+      </div>`;
+          newMasc.innerHTML = html;
+          itensMasculinos.appendChild(newMasc);
+        }
+      }
+    </script>
+  </body>
+</html>
